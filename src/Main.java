@@ -2,60 +2,64 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        // Crear una cátedra
+        // Crear cátedra
         Catedra catedra = new Catedra();
-        catedra.setCodigo(101);
-        catedra.setDenominacion("Matemática");
+        catedra.setCodigo(100);
+        catedra.setDenominacion("Programación");
 
         // Crear alumnos
-        Alumno alumno1 = new Alumno();
-        alumno1.setLegajo(1);
-        alumno1.setNombre("Juan");
-        alumno1.setApellido("Pérez");
-        alumno1.setFechaNacimiento(new GregorianCalendar(2000, Calendar.MAY, 15).getTime());
+        Alumno a1 = new Alumno();
+        a1.setLegajo(1);
+        a1.setNombre("Carlos");
+        a1.setApellido("Gómez");
 
-        Alumno alumno2 = new Alumno();
-        alumno2.setLegajo(2);
-        alumno2.setNombre("Ana");
-        alumno2.setApellido("López");
-        alumno2.setFechaNacimiento(new GregorianCalendar(2001, Calendar.AUGUST, 23).getTime());
+        Alumno a2 = new Alumno();
+        a2.setLegajo(2);
+        a2.setNombre("Lucía");
+        a2.setApellido("Fernández");
 
-        // Crear notas para los alumnos
-        Nota nota1 = new Nota();
-        nota1.setId(1);
-        nota1.setValor(8.5);
-        nota1.setFechaExamen(new Date());
-        nota1.setEsRecuperatorio(false);
-        nota1.setCatedra(catedra);
+        // Crear 5 notas para a1 (sin recuperatorio)
+        List<Nota> notas1 = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Nota nota = new Nota();
+            nota.setId(i);
+            nota.setValor(8 + i % 2); // valores 8, 9, 8, 9, 8
+            nota.setEsRecuperatorio(false);
+            nota.setFechaExamen(new Date());
+            nota.setCatedra(catedra);
+            notas1.add(nota);
+        }
+        a1.setNotas(notas1);
 
-        Nota nota2 = new Nota();
-        nota2.setId(2);
-        nota2.setValor(9.0);
-        nota2.setFechaExamen(new Date());
-        nota2.setEsRecuperatorio(false);
-        nota2.setCatedra(catedra);
+        // Crear 6 notas para a2 (1 recuperatorio)
+        List<Nota> notas2 = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            Nota nota = new Nota();
+            nota.setId(i + 10);
+            nota.setValor(9); // todas 9
+            nota.setEsRecuperatorio(i == 2); // la tercera es recuperatorio
+            nota.setFechaExamen(new Date());
+            nota.setCatedra(catedra);
+            notas2.add(nota);
+        }
+        a2.setNotas(notas2);
 
-        Nota nota3 = new Nota();
-        nota3.setId(3);
-        nota3.setValor(7.0);
-        nota3.setFechaExamen(new Date());
-        nota3.setEsRecuperatorio(false);
-        nota3.setCatedra(catedra);
+        // Crear división y agregar alumnos
+        DivisionCurso division = new DivisionCurso();
+        division.setAnio(2024);
+        division.setDivision(1);
+        division.setCodigo(123);
+        division.agregarAlumno(a1);
+        division.agregarAlumno(a2);
 
-        // Asignar notas
-        alumno1.setNotas(Arrays.asList(nota1, nota3));
-        alumno2.setNotas(Collections.singletonList(nota2));
-
-        // Asignar alumnos a la cátedra
-        catedra.setAlumnos(Arrays.asList(alumno1, alumno2));
-
-        // PROBAR MÉTod: mejorAlumnoCatedra *
-        Alumno mejor = catedra.mejorAlumnoCatedra();
+        // Probar mejor alumno
+        Alumno mejor = division.mejorAlumnoDivisionCurso();
 
         if (mejor != null) {
-            System.out.println("El mejor alumno es: " + mejor.getNombre() + " " + mejor.getApellido());
+            System.out.println("El mejor alumno de la división (sin recuperatorios y con al menos 5 exámenes) es: "
+                    + mejor.getNombre() + " " + mejor.getApellido());
         } else {
-            System.out.println("No se encontró mejor alumno.");
+            System.out.println("No se encontró alumno que cumpla las condiciones.");
         }
     }
 }
