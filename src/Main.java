@@ -79,5 +79,12 @@ public class Main {
         } else {
             System.out.println("No se encontró ningún alumno que cumpla las condiciones.");
         }
+
+        List<Alumno> mejoresAlumnos = escuela.getMejoresAlumnos(2000);
+
+        System.out.println("Mejores alumnos: ");
+        for(var alumno : mejoresAlumnos){
+            System.out.println(alumno.getApellido());
+        }
     }
 }
